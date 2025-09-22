@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>MolmoAct</title>
+    <meta name="description" content="MolmoAct">
+    <meta name="keywords" content="Action Reasoning Model, Vision-Language-Action Model">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <!-- <link rel="stylesheet" href="./static/css/fontawesome.all.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script defer src="./static/js/fontawesome.all.min.js"></script> -->
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script> -->
+
+
+    <script type="text/javascript" async 
+        src="https://polyfill.io/v3/polyfill.min.js?features=es6">
+    </script>
+    <script type="text/javascript" async 
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js">
+    </script>
+
+    <script type="text/javascript">
+        function init() {
+            const video_carousel = document.getElementById("results-carousel");
+            video_carousel.addEventListener("error", () => {
+                console.log("Error loading video: ", video_carousel.src);
+            }, true);
+
+        }
+    </script>
+
+
+
+</head>
+
+<body onload="init();">
+    <!-- Title / Authors Info -->
+    <section class="hero">
+        <div  class="hero-body" style="padding-bottom: 0 !important;">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered">
+                    <div class="column has-text-centered">
+                        <h1 class="title is-1 publication-title" style="margin-bottom: 0 !important; display: flex; align-items: center; justify-content: center;">
+                            MolmoAct:
+                        </h1>
+                        <h2 class="title is-2 publication-title">
+                            Action Reasoning Models that can Reason in Space
+                        </h2>                    
+                        <div class="is-size-5 publication-authors">
+                            Anonymous Submission
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <!-- Video Teaser -->
+            <video id="teaser" autoplay muted muted loop playsinline height="100">
+                <source src="static/videos/vid_intro.mp4" type="video/mp4">
+            </video>
+            <!-- /Video Teaser -->
+            <br/>
+            <br/>
+            <!-- Abstract. -->
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Abstract</h2>
+                    <div class="content has-text-justified">
+                        <p>
+                            Reasoning is central to purposeful action; yet most robotic foundation models map perception and instructions directly to control, 
+                            which limits adaptability, generalization, and semantic grounding. We introduce Action Reasoning Models (ARMs), a class of robotic 
+                            foundation models that integrates perception, planning, and control through a structured three-stage pipeline. Our model, MolmoAct, 
+                            encodes observations and instructions into depth-aware perception tokens, generates mid-level spatial plans as editable trajectory traces, 
+                            and predicts precise low-level actions, enabling explainable and steerable behavior. MolmoAct-7B-D achieves strong performance across simulation 
+                            and real-world settings: 70.5% zero-shot accuracy on SimplerEnv Visual Matching tasks, surpassing closed-source π<sub>0</sub> and GR00T N1.5; 
+                            86.6% average success on LIBERO, including a +6.3% gain over ThinkAct on long-horizon tasks; and in real-world fine-tuning, 
+                            +10% (single-arm) and +22.7% (bimanual) task progression over π<sub>0</sub>-FAST. It also outperforms baselines by +23.3% on out-of-distribution 
+                            generalization and achieves top human-preference scores for open-ended instruction following and trajectory steering. Furthermore, 
+                            we release, the MolmoAct Dataset — a robot dataset comprising over 10k high-quality robot trajectories across diverse scenarios and tasks. 
+                            Training with this dataset yields an average 5.5% improvement in general performance over the base model. We release all model weights, 
+                            training code, MolmoAct Dataset and our action reasoning dataset, establishing MolmoAct as both a state-of-the-art robotics foundation model 
+                            and an open blueprint for building ARMs that transform perception into purposeful action through grounded reasoning
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!--/ Abstract. -->
+        </div>
+    </section>
+
+    <section class="hero is-light is-small">
+        <div class="hero-body">
+            <div class="container">
+                <div class="column has-text-centered">
+                    <h3 class="title is-5">Real World Results</h3>
+                </div>
+                <div id="results-carousel" class="carousel results-carousel">
+                    <div class="item item-steve">
+                        <video id="steve" data-speed="8" autoplay muted muted loop playsinline>
+                            <source src="static/videos/real_world_preview/bimanual_fold_towel.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-fullbody">
+                        <video id="fullbody" data-speed="8" autoplay muted muted loop playsinline>
+                            <source src="static/videos/real_world_preview/singlearm_trash_bussing.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-shiba">
+                        <video id="shiba" data-speed="2" autoplay muted muted loop playsinline>
+                            <source src="static/videos/real_world_preview/steer_put_toy_to_mat.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-ender">
+                        <video id="ender" data-speed="1.25" autoplay muted muted loop playsinline>
+                            <source src="static/videos/real_world_preview/singlearm_wipe_table.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="column has-text-centered">
+                    <h3 class="title is-5">MolmoAct Dataset</h3>
+                </div>
+                <div id="results-carousel" class="carousel results-carousel">
+                    <div class="item item-patrick">
+                        <video id="patrick" autoplay muted muted loop playsinline>
+                            <source src="static/videos/molmoact_dataset_primary/household_clear_spill_100.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-fullcuerpo">
+                        <video id="fullcuerpo" autoplay muted muted loop playsinline>
+                            <source src="static/videos/molmoact_dataset_primary/household_close_laptop_lid_bedroom_100.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-shibar">
+                        <video id="shibar" autoplay muted muted loop playsinline>
+                            <source src="static/videos/molmoact_dataset_primary/household_put_plate_in_dishwasher_201.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-patrick">
+                        <video id="patrick" autoplay muted muted loop playsinline>
+                            <source src="static/videos/molmoact_dataset_primary/tabletop_hang_mug_150.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-fullcuerpo">
+                        <video id="fullcuerpo" autoplay muted muted loop playsinline>
+                            <source src="static/videos/molmoact_dataset_primary/tabletop_load_the_bowl_76.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-shibar">
+                        <video id="shibar" autoplay muted muted loop playsinline>
+                            <source src="static/videos/molmoact_dataset_primary/tabletop_stand_sanitizer_150.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">Overview</h2>
+            <div class="columns is-centered has-text-centered">
+                <div class="column">
+                    <p>
+                        <figure>
+                            <img src="static/images/fig1_overview.png" style="max-width: 100%; height: auto;">
+                        </figure>
+                        <br>
+                        <div class="content has-text-justified">
+                            MolmoAct is an open action reasoning model that, given a user's language instruction, reasons
+                            in space and autoregressively predicts three structured reasoning chains: Depth Perception Tokens for sensing and
+                            reconstructing the 3D environment, Visual Reasoning Trace Tokens for representing its planned trajectory in the
+                            scene, and Action Tokens for generating the corresponding robot control commands. Each explainable reasoning
+                            chain can be independently decoded—yielding a depth map of the scene, a 2D trajectory overlay on the image plane,
+                            and executed actions in the physical world—providing explicit, spatially grounded reasoning at every stage.
+                        </div>
+                    </p>
+                </div>
+            </div>
+            
+            <h2 class="title is-3">Training Process of MolmoAct</h2>
+            <div class="columns is-centered has-text-centered">
+                <div class="column">
+                    <p>
+                        <figure>
+                            <img src="static/images/fig2_model_and_training.png" style="max-width: 100%; height: auto;">
+                        </figure>
+                        <br>
+                        <div class="content has-text-justified">
+                        The model training process consists of two stages: Pre-training (left)
+                        and Post-training, Mid-training & Inference (right). During pre-training, the vision–language backbone (Molmo) is
+                        trained on multimodal and robot reasoning data for diverse objectives, including discretized robot control, 2D pointing,
+                        trajectory drawing, open-vocabulary question answering, and perception token prediction. In post-training, the action
+                        reasoning model consumes multi-view camera images and either natural language instructions or visual trajectory
+                        inputs, generating perception tokens, visual reasoning trace tokens, and action tokens for execution
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="title is-3">Pre-training Data Mixture</h2>
+            <div class="columns is-centered has-text-centered">
+                <div class="column">
+                    <p>
+                        <figure>
+                            <img src="static/images/fig3_datamix.png" style="max-width: 100%; height: auto;">
+                        </figure>
+                        <br>
+                        <div class="content has-text-justified">
+                            Distribution of data mixture in the overall pre-training mixture (left) and in the sampled subset used for
+                            MolmoAct pre-training (right). The mixture contains primarily action reasoning data (38.7%), trajectory-conditioned
+                            data (38.7%), and multimodal web data (21.5%), with small fractions of auxiliary depth and trace data (0.5% each).
+                            The sampled subset increases the proportion of auxiliary data (7.5% each for depth and line) while reducing multimodal
+                            web data to 5%.
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="title is-3">MolmoAct Dataset</h2>
+            <div class="columns is-centered has-text-centered">
+                <div class="column">
+                    <p>
+                        <figure>
+                            <img src="static/images/fig4_molmoact_dataset.png" style="max-width: 100%; height: auto;">
+                        </figure>
+                        <br>
+                        <div class="content has-text-justified">
+                            Examples and verb distribution in the MolmoAct Dataset. Left: Sample robot manipulation tasks paired
+                            with natural language instructions, spanning diverse household activities such as closing a laptop, loading a plate,
+                            cleaning a toilet, and opening a microwave. Right: Log-scale distribution of the top verbs in the dataset, showing a
+                            long-tail pattern with “put,” “turn,” and “close” as the most frequent actions.
+                        </div>
+                    </p>
+                </div>
+            </div>
+            
+
+            <h2 class="title is-3">Experiments and Results</h2>
+            <h2 class="title is-4">How well does MolmoAct perform, after pre-training, on tasks drawn from the same distribution as its training data?</h2>
+            <div class="columns is-centered has-text-centered">
+                <div class="column">
+                    <p>
+                        <figure>
+                            <img src="static/images/fig5_simpler.png"></a>
+                        </figure>
+                        <br>
+                        <div class="content has-text-justified">
+                            <b>Evaluation Setup and Baselines.</b> We first evaluated MolmoAct's zero-shot capability—its ability immediately
+                            after pre-training and before any task-specific fine-tuning. Unlike π<sub>0</sub>, GR00T N1.5
+                            , and other proprietary VLA models that rely on large-scale private robot datasets and the
+                            full OXE dataset for pre-training, MolmoAct was trained exclusively on curated action reasoning data
+                            filtered from a subset of OXE (specifically BC-Z, BridgeData V2, and
+                            RT-1), combined with multimodal web data and auxiliary robot data. This amounts to approximately 26.3M
+                            samples—an order of magnitude smaller than π<sub>0</sub>, which
+                            uses at least 903M for pre-training. To evaluate MolmoAct's out-of-the-box generalization, we used the
+                            SimplerEnv benchmark, which features both visual-matching and variant-aggregation tasks across WidowX
+                            and Google Robot platforms. As MolmoAct's pre-training distribution is most
+                            aligned with the Google Robot visual-matching tasks, we focused our evaluation on this suite to best isolate
+                            in-distribution performance and capabilities of pre-training.
+                            We compared MolmoAct-7B-D-Pretrain against a set of generalist policies, including TraceVLA, RT-1X, OpenVLA, RoboVLM, Emma-x,
+                            π<sub>0</sub> and π<sub>0</sub>-FAST, Octo, Magma, HPT, SpatialVLA and GR00T N1.5. Most
+                            baselines were evaluated in the zero-shot setting, with a subset also tested after fine-tuning. We additionally
+                            fine-tuned MolmoAct-7B-D-Pretrain on the RT-1 subset of OXE to assess its capacity when given more pre-training data.
+                            <br></br>
+                            <b>Evaluation Results.</b> MolmoAct-7B-D-Pretrain achieved strong zero-shot performance on the SimplerEnv
+                            visual-matching suite, reaching 70.5% success rate and outperforming baselines such as GR00T N1.5, π<sub>0</sub>,
+                            π<sub>0</sub>-FAST, and Magma. With fine-tuning on the same RT-1 subset of OXE, MolmoAct-7B-D improved to
+                            71.6%, exceeding Magma by 3.2% as shown in Table 1. These results indicate that MolmoAct is both an
+                            effective zero-shot generalist and a strong initialization for fine-tuned deployment.
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="title is-4">How effectively does MolmoAct adapt to novel tasks, domains, and embodiments through lightweight post-training fine-tuning?</h2>
+            <div class="columns is-centered has-text-centered">
+                <div class="column">
+                    <p>
+                        <figure>
+                            <img src="static/images/fig6_libero.png" style="width:600px; height:auto;"></a>
+                        </figure>
+                        <figure>
+                            <img src="static/images/fig7_real_eval_indist.png"></a>
+                        </figure>
+                        <br>
+                        <div class="content has-text-justified">
+                            <b>Evaluation Setups and Baselines.</b> We evaluate MolmoAct in both simulation and real-world settings to assess
+                            its fast adaptation after post-training. In simulation, we evaluate on the LIBERO simulation benchmark,
+                            which consists of a Franka Emika Panda arm in simulation with demonstrations containing
+                            front and wrist view camera images (256x256 px), language instructions, and delta end-effector pose actions.
+                            We follow prior works and evaluate on four task suites - LIBERO-Spatial, LIBERO-Object,
+                            LIBERO-Goal, and LIBERO-Long - each with 500 demonstrations across 10 tasks. We trained on a modified dataset
+                            that filtered out no-op actions and unsuccessful demonstrations.
+                            Moreover, we set action chunk size to K = 8 for evaluation on each task suite and execute full chunks before
+                            redoing action reasoning. We fine-tune MolmoAct-7B-D using Low-Rank Adaptation (LoRA) and compared
+                            to state-of-the-art generalist autoregressive policies, such as TraceVLA, OpenVLA, SpatialVLA, π<sub>0</sub>-FAST, CoT-VLA, WorldVLA,
+                            ThinkAct, and NORA-AC. In the real world, we evaluate MolmoAct on six tasks across single-arm and bimanual Franka setups. The
+                            single-arm tasks include put_bowl_in_sink, wipe_table, and table_bussing. The bimanual tasks include
+                            set_table, lift_tray, and fold_towel. For each task, we collected 50 human tele-operated demonstrations
+                            and post-trained both MolmoAct-7B-D and baseline models. We evaluate the task progress over 25 trials
+                            per task. This setup enables a comprehensive comparison
+                            of adaptation efficiency across tasks and embodiments.
+                            <br></br>
+                            <b>Evaluation Results.</b> On the LIBERO benchmark, MolmoAct-7B-D achieves an average success rate of
+                            86.6%, the highest among all compared methods. It performs particularly well on LIBERO-Long, a challenging
+                            long-horizon suite, where it exceeds the performance of ThinkAct—the second-best method in this setting—by
+                            6.3%. In the real world, MolmoAct demonstrates effective fine-tuning and generalization across different
+                            embodiments. It outperforms π<sub>0</sub>-FAST by an average of 10% in task progression on single-arm tasks and by
+                            22.7% on bimanual tasks, as shown in the second figure above.
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="title is-4">How effectively can MolmoAct generalize beyond its training distribution?</h2>
+            <div class="columns is-centered has-text-centered">
+                <div class="column">
+                    <p>
+                        <figure>
+                            <img src="static/images/fig8_real_eval_outdist.png"></a>
+                        </figure>
+                        <br>
+                        <div class="content has-text-justified">
+                            <b>Evaluation Setups and Baselines.</b> We evaluate MolmoAct in both simulation and real-world settings to assess its ability to generalize beyond the
+                            training data distribution, both in zero-shot and fine-tuned regimes. In simulation, we follow the SimplerEnv
+                            variant-aggregation protocol, which introduces distribution shifts through changes in lighting, textures, and
+                            camera viewpoints. We compare MolmoAct-7B-D-Pretrain and its RT-1 fine-tuned variant against
+                            several state-of-the-art generalist policies—TraceVLA, RT-1X, OpenVLA, RoboVLM, Emma-X, π<sub>0</sub>-FAST, and
+                            SpatialVLA. For real-world evaluation, we test MolmoAct-7B-D using a single Franka arm on a multi-task
+                            setup involving three objects and two different-colored plates arranged on a tabletop. We collect over 300
+                            tele-operated demonstrations spanning three task types, then post-train MolmoAct-7B-D and baselines in
+                            a multi-task setting. During evaluation, we test generalization in four aspects: (1) Language Variation —
+                            rephrased instructions, (2) Spatial Variation — changes in target object position, (3) Distractors — addition
+                            of irrelevant objects, and (4) Novel Objects — substitution of target objects with unseen ones. We benchmark
+                            MolmoAct-7B-D against π<sub>0</sub>-FAST and OpenVLA, testing three variants per task and four trials per variant.
+                            <br></br>
+                            <b>Evaluation Results.</b> In simulation, fine-tuned MolmoAct-7B-D-Pretrain achieves 72.1% on the variant
+                            aggregation tasks as shown in Table 1, outperforming all baselines and exceeding the second-best model,
+                            RT-2-X, by 7.8%. The performance difference between variant aggregation and visual matching is less than 1%,
+                            highlighting MolmoAct's robustness to visual and distributional shifts. In the real world, MolmoAct-7B-D
+                            consistently surpasses all baselines across all generalization axes, achieving a 23.3% average improvement in
+                            task progression over π<sub>0</sub>-FAST as shown in figure above.
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="title is-4">How does mid-training on the MolmoAct Dataset improve MolmoAct's generalist performance?</h2>
+            <div class="columns is-centered has-text-centered">
+                <div class="column">
+                    <p>
+                        <figure>
+                            <img src="static/images/fig9_real_eval_molmoact_dataset.png"></a>
+                        </figure>
+                        <br>
+                        <div class="content has-text-justified">
+                            <b>Evaluation Setups and Baselines.</b> To assess the effectiveness of mid-training with the MolmoAct Dataset,
+                            we conducted real-world experiments on three curated tasks that go beyond simple pick-and-place: close_-
+                            lid, rotate_pot, and pour_tea. For each task, we collected 50 demonstrations and trained four models:
+                            MolmoAct-7B-D, MolmoAct-7B-D without mid-training, π<sub>0</sub>-FAST, and OpenVLA. Each model was then
+                            evaluated over 10 trials per task.
+                            <br></br>
+                            <b>Evaluation Results.</b> Based on the real-world ablation studies shown in the figure above, MolmoAct-7B-D
+                            outperforms its counterpart without mid-training by an average margin of 5.5% across the three tasks,
+                            demonstrating that mid-training on the MolmoAct Dataset yields a consistent performance boost of
+                            around 5%. Even without mid-training, MolmoAct-7B-D-Pretrain surpasses π<sub>0</sub>-FAST and OpenVLA by
+                            14.8% and 10.9%, respectively.
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="title is-4">How effectively does MolmoAct follow language commands?</h2>
+            <div class="columns is-centered has-text-centered">
+                <div class="column">
+                    <p>
+                        <figure>
+                            <img src="static/images/fig10_line_generalize.png"></a>
+                        </figure>
+                        <figure>
+                            <img src="static/images/fig11_lang_generalize.png"></a>
+                        </figure>
+                        <br>
+                        <div class="content has-text-justified">
+                            <b>Evaluation Setups and Baselines.</b> We evaluated MolmoAct's ability to follow natural language instructions in two settings: (i) executing
+                            tasks with open-ended commands in simulation, and (ii) generating visual traces conditioned on language
+                            prompts. For the first one, we curated five manipulation scenarios in the SimplerEnv environment using a
+                            Google Robot, each involving novel out-of-distribution objects. Ten participants provided 29 open-ended
+                            instructions (e.g., “Put the redbull into the bowl."). We compared MolmoAct-7B-D-Pretrain to SpatialVLA
+                            and OpenVLA, both pre-trained on the OXE dataset. For each instruction, the models generated rollouts,
+                            which were evaluated in a head-to-head arena-style web interface. Human annotators (n=100) selected which
+                            rollout best matched the instruction. We collected over 1,500 votes, which were converted into Elo ratings
+                            (see the first figure above). For visual trace generation, 10 participants wrote 87 language prompts for 30 internet-sourced
+                            images depicting tabletop and mobile manipulation scenarios. MolmoAct-7B-D-Pretrain was evaluated
+                            against Gemini-2.5-Flash, GPT-4o, and HAMSTER—a VLM fine-tuned for trace generation. Participants voted
+                            in a similar blind arena interface, resulting in over 1,000 votes.
+                            <br></br>
+                            <b>Evaluation Results.</b> MolmoAct-7B-D-Pretrain achieved the highest Elo rating in the simulation instructionfollowing task,
+                            outperforming SpatialVLA by 109 points and OpenVLA by an even larger margin. Pairwise win
+                            rates also show that MolmoAct-7B-D-Pretrain winning over SpatialVLA in 58% of comparisons and over
+                            OpenVLA in 81%. A sample rollout comparison for the instruction “Put the redbull into the bowl." is shown on
+                            the right in the second figure above. In the visual trace task, MolmoAct-7B-D-Pretrain again outperformed all baselines,
+                            achieving significantly higher Elo scores with non-overlapping 95% confidence intervals, demonstrating strong
+                            language-grounded generalization in both action execution and trace generation as shown in the first figure above.
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="title is-4">How steerable is MolmoAct, and how can this steerability enhance user interaction?</h2>
+            <div class="columns is-centered has-text-centered">
+                <div class="column">
+                    <p>
+                        <figure>
+                            <img src="static/images/fig12_steerability.png"></a>
+                        </figure>
+                        <br>
+                        <div class="content has-text-justified">
+                            <b>Evaluation Setups and Baselines.</b> We aim to evaluate MolmoAct's ability to steer robot actions, particularly
+                            when initial language instructions are ambiguous. Specifically, we investigate the effectiveness of different
+                            interaction mediums in guiding MolmoAct toward user-intended targets during task execution. For this
+                            purpose, we set up a pick_up_bowl task, post-training MolmoAct-7B-D and the baseline model (π<sub>0</sub>-FAST)
+                            with 100 collected demonstrations, each annotated with two distinct language instructions: one specifying the
+                            clean bowl and the other the dirty bowl, as depicted in the figure above. During evaluation, we first provide ambiguous
+                            instructions such as "pick up (the) bowl," prompting MolmoAct-7B-D to predict an initial trajectory
+                            towards one of the bowls. Subsequently, we test two steering methods: visual trace sketches to visually instruct
+                            the model toward the alternative bowl, and open-ended natural language instructions provided interactively
+                            by participants (N=10) that are different from the ground-truth instruction. For comparison, we also attempt
+                            to steer the actions of π<sub>0</sub>-FAST by changing language instructions at test-time. Each model is evaluated in 15
+                            trials, and the performance is evaluated according to the progression of the task.
+                            <br></br>
+                            <b>Evaluation Results.</b> Based on our experiments, we observed that MolmoAct-7B-D is notably more steerable
+                            via visual trace inputs, achieving a success rate of 75%. Additionally, steering using visual traces significantly
+                            outperforms steering via open-ended natural language instructions by a margin of 33%. Lastly, we demonstrate
+                            that MolmoAct-7B-D exhibits superior instruction-following capabilities compared to the baseline model,
+                            π<sub>0</sub>-FAST. Specifically, when steering robot actions using open-ended language instructions, MolmoAct
+                            surpasses π<sub>0</sub>-FAST by a substantial margin of 29%, highlighting its enhanced instruction-following capabilities
+                            to user commands.
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- <div class="columns is-centered has-text-centered">
+        <h2 class="title is-4">More Video Results ⬇️</h2>
+    </div> -->
+
+
+    <footer class="footer"  style="padding-bottom: 3rem !important;">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column">
+                    <div class="content has-text-centered">
+                        <p> 
+                            Website borrowed from <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a> under a <a
+                            href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0
+                            International</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
+
+<script>
+(() => {
+  const CAROUSEL = document.getElementById('results-carousel');
+
+  const getRate = v => {
+    const r = parseFloat(v.dataset.speed || '1');
+    return Number.isFinite(r) ? r : 1;
+  };
+
+  const applyRate = v => {
+    const r = getRate(v);
+    v.defaultPlaybackRate = r;
+    if (v.playbackRate !== r) v.playbackRate = r;
+  };
+
+  const primeVideo = v => {
+    if (!v || v.__primed) return;
+    v.__primed = true;
+
+    applyRate(v);
+    v.muted = true;                         // keeps autoplay happy
+    v.play().catch(() => { /* ignore */ });
+
+    // Some browsers reset rate on these events; keep it sticky.
+    ['loadedmetadata','loadeddata','play','playing','seeked','ratechange']
+      .forEach(ev => v.addEventListener(ev, () => applyRate(v)));
+  };
+
+  // Prime any videos currently in the DOM
+  CAROUSEL.querySelectorAll('video').forEach(primeVideo);
+
+  // Re-apply when a slide becomes visible (covers clones & loop-around)
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const v = e.target;
+        primeVideo(v);
+        applyRate(v);
+        v.play().catch(() => {});
+      }
+    });
+  }, { root: CAROUSEL, threshold: 0.6 });
+
+  CAROUSEL.querySelectorAll('video').forEach(v => io.observe(v));
+
+  // If your carousel inserts/clones slides, observe DOM changes and prime new videos.
+  const mo = new MutationObserver(muts => {
+    muts.forEach(m => {
+      m.addedNodes.forEach(n => {
+        if (n.nodeType !== 1) return;
+        if (n.tagName === 'VIDEO') {
+          primeVideo(n);
+          io.observe(n);
+        } else {
+          n.querySelectorAll?.('video').forEach(v => { primeVideo(v); io.observe(v); });
+        }
+      });
+    });
+  });
+  mo.observe(CAROUSEL, { childList: true, subtree: true });
+
+  // OPTIONAL: if you know your carousel lib, hook its slide-change event too:
+  // Slick:   $('.results-carousel').on('afterChange', () => speedCarousel());
+  // Swiper:  swiper.on('slideChange', () => speedCarousel());
+  // Owl:     $('.results-carousel').on('changed.owl.carousel', () => speedCarousel());
+  // Splide:  splide.on('moved', () => speedCarousel());
+  function speedCarousel() {
+    CAROUSEL.querySelectorAll('video').forEach(v => { applyRate(v); v.play().catch(()=>{}); });
+  }
+})();
+</script>
